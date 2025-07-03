@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>マンホールポンプ点検アプリ</title>
+    
+    <!-- ファビコン設定 -->
+    <link rel="icon" type="image/png" href="icon/r.png">
+    <link rel="shortcut icon" href="icon/r.png">
+    <link rel="apple-touch-icon" href="icon/r.png">
+    
+    <!-- Google Fonts - Noto Sans JP -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#546E7A">
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qr-scanner@1.4.2/qr-scanner.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-main">
+                <img src="icon/main_mini.png" alt="マンホールポンプ点検システム" class="header-logo">
+                <h1>マンホールポンプ点検</h1>
+            </div>
+            <div class="header-actions">
+                <button id="qr-scan-btn" class="btn btn-secondary">QRスキャン</button>
+                <button id="data-export-btn" class="btn btn-secondary">データ出力</button>
+                <button id="master-edit-btn" class="btn btn-secondary">マスタ編集</button>
+            </div>
+        </header>
+
+        <!-- アラート表示エリア -->
+        <div id="alert-container" class="alert-container"></div>
+
+        <main>
+            <div class="tab-container">
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="inspection">点検入力</button>
+                    <button class="tab-btn" data-tab="history">点検履歴</button>
+                    <button class="tab-btn" data-tab="graph">グラフ</button>
+                    <button class="tab-btn" data-tab="map">地図</button>
+                </div>
+
+                <!-- 点検入力タブ -->
+                <div class="tab-content active" id="inspection-tab">
+                    <form id="inspection-form">
+                        <div class="form-section">
+                            <h2>基本情報</h2>
+                            <div class="form-group">
+                                <label for="manhole-name">マンホール名</label>
+                                <select id="manhole-name" required>
+                                    <option value="">選択してください</option>
+                                </select>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="inspection-date">点検日</label>
+                                    <input type="date" id="inspection-date" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inspector">担当者</label>
+                                    <div class="inspector-selection">
+                                        <select id="inspector" multiple required>
+                                            <option value="">担当者を選択してください</option>
+                                        </select>
+                                        <button type="button" id="manage-inspectors-btn" class="btn-secondary">担当者管理</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="form-section">
+                            <h2>運転状況</h2>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>運転選択</label>
+                                    <div class="radio-group">
+                                        <label><input type="radio" name="operation-mode" value="自動"> 自動</label>
+                                        <label><input type="radio" name="operation-mode" value="手動"> 手動</label>
+                                        <label><input type="radio" name="operation-mode" value="停止"> 停止</label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>ポンプ選択</label>
+                                    <div class="radio-group">
+                                        <label><input type="radio" name="pump-selection" value="交互"> 交互</label>
+                                        <label><input type="radio" name="pump-selection" value="1号機"> 1号機</label>
+                                        <label><input type="radio" name="pump-selection" value="2号機"> 2号機</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h2>電気系統</h2>
+                            <div class="form-group">
+                                <label for="voltage">電圧計 (210±20V)</label>
+                                <div class="input-with-voice">
+                                    <input type="number" id="voltage" placeholder="210">
+                                    <button type="button" class="voice-btn" data-target="voltage">🎤</button>
+                                </div>
+                                <span class="warning" id="voltage-warning"></span>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="no1-current">No1電流値</label>
+                                    <div class="input-with-voice">
+                                        <input type="number" id="no1-current" step="0.1" placeholder="0.0">
+                                        <button type="button" class="voice-btn" data-target="no1-current">🎤</button>
+                                    </div>
+                                    <div class="current-info" id="no1-current-info"></div>
+                                    <span class="warning" id="no1-current-warning"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label for="no2-current">No2電流値</label>
+                                    <div class="input-with-voice">
+                                        <input type="number" id="no2-current" step="0.1" placeholder="0.0">
+                                        <button type="button" class="voice-btn" data-target="no2-current">🎤</button>
+                                    </div>
+                                    <div class="current-info" id="no2-current-info"></div>
+                                    <span class="warning" id="no2-current-warning"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h2>水位情報</h2>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="operation-water-level">運転水位</label>
+                                    <div class="unit-input">
+                                        <div class="input-with-voice">
+                                            <input type="number" id="operation-water-level" step="0.01" placeholder="0.00">
+                                            <button type="button" class="voice-btn" data-target="operation-water-level">🎤</button>
+                                        </div>
+                                        <select id="operation-water-level-unit">
+                                            <option value="m">m</option>
+                                            <option value="%">%</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="abnormal-water-level">異常高水位</label>
+                                    <div class="unit-input">
+                                        <div class="input-with-voice">
+                                            <input type="number" id="abnormal-water-level" step="0.01" placeholder="0.00">
+                                            <button type="button" class="voice-btn" data-target="abnormal-water-level">🎤</button>
+                                        </div>
+                                        <select id="abnormal-water-level-unit">
+                                            <option value="m">m</option>
+                                            <option value="%">%</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h2>点検項目</h2>
+                            <div id="dynamic-inspection-items" class="dynamic-inspection-items">
+                                <div class="no-manhole-selected">
+                                    <p>マンホールを選択すると、そのマンホール用の点検項目が表示されます</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h2>特記事項・写真</h2>
+                            <div class="form-group">
+                                <label for="remarks">特記事項（備考欄）</label>
+                                <textarea id="remarks" rows="3" placeholder="特記事項があれば記入してください"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>異常箇所の写真 <span id="photo-count">0枚</span></label>
+                                <div class="photo-section">
+                                    <button type="button" id="take-photo-btn" class="btn btn-photo">写真を撮影</button>
+                                    <input type="file" id="photo-input" accept="image/*" capture="camera" multiple style="display: none;">
+                                    <div id="photo-preview-container" class="photo-preview-container"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">点検データを保存</button>
+                            <button type="button" id="clear-form-btn" class="btn btn-secondary">フォームクリア</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- 点検履歴タブ -->
+                <div class="tab-content" id="history-tab">
+                    <div class="history-controls">
+                        <div class="form-group">
+                            <label for="history-manhole">マンホール名</label>
+                            <select id="history-manhole">
+                                <option value="">全て</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="history-period">期間</label>
+                            <select id="history-period">
+                                <option value="all">全期間</option>
+                                <option value="1month">1ヶ月</option>
+                                <option value="3months">3ヶ月</option>
+                                <option value="6months">6ヶ月</option>
+                                <option value="1year">1年</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="history-list" class="history-list"></div>
+                </div>
+
+                <!-- グラフタブ -->
+                <div class="tab-content" id="graph-tab">
+                    <div class="graph-controls">
+                        <div class="form-group">
+                            <label for="graph-manhole">マンホール名</label>
+                            <select id="graph-manhole">
+                                <option value="">選択してください</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="graph-type">グラフ種類</label>
+                            <select id="graph-type">
+                                <option value="current">電流値推移</option>
+                                <option value="voltage">電圧推移</option>
+                                <option value="water-level">水位推移</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="graph-container" class="graph-container">
+                        <canvas id="chart" width="800" height="400"></canvas>
+                    </div>
+                    <div id="health-status" class="health-status"></div>
+                </div>
+
+                <!-- 地図タブ -->
+                <div class="tab-content" id="map-tab">
+                    <div class="map-controls">
+                        <div class="form-group">
+                            <label for="map-manhole">マンホール選択</label>
+                            <select id="map-manhole">
+                                <option value="">全て表示</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="manual-latitude">緯度</label>
+                            <input type="number" id="manual-latitude" step="0.000001" placeholder="35.6762">
+                        </div>
+                        <div class="form-group">
+                            <label for="manual-longitude">経度</label>
+                            <input type="number" id="manual-longitude" step="0.000001" placeholder="139.6503">
+                        </div>
+                        <button id="get-location-btn" class="btn btn-primary">現在地取得</button>
+                        <button id="add-location-btn" class="btn btn-secondary">手動位置追加</button>
+                        <button id="goto-location-btn" class="btn btn-secondary">位置へ移動</button>
+                    </div>
+                    <div id="map-container" class="map-container">
+                        <div id="map" style="height: 400px; width: 100%;"></div>
+                    </div>
+                    <div class="qr-controls">
+                        <h3>QRコード管理</h3>
+                        <div class="qr-actions">
+                            <button id="generate-qr-btn" class="btn btn-primary">選択したマンホールのQR生成</button>
+                            <button id="generate-all-qr-btn" class="btn btn-secondary">全マンホールQR生成</button>
+                        </div>
+                        <div id="qr-display" class="qr-display"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- マスタ編集モーダル -->
+        <div id="master-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>マスタ情報編集</h2>
+                    <button class="close-btn" id="close-master-modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="master-data-notice">
+                        <p><strong>💾 データ保存について：</strong> マスタデータはブラウザ内に保存されます。データを永続的に保持するには「データ出力」からバックアップを取ってください。</p>
+                    </div>
+                    <div class="master-tabs">
+                        <button class="master-tab-btn active" data-master-tab="manholes">マンホールマスタ</button>
+                        <button class="master-tab-btn" data-master-tab="inspectors">担当者マスタ</button>
+                    </div>
+                    
+                    <!-- マンホールマスタタブ -->
+                    <div class="master-tab-content active" id="manholes-master-tab">
+                        <div class="master-controls">
+                            <button id="add-manhole-btn" class="btn btn-primary">新規マンホール追加</button>
+                        </div>
+                        <div id="master-list" class="master-list"></div>
+                    </div>
+                    
+                    <!-- 担当者マスタタブ -->
+                    <div class="master-tab-content" id="inspectors-master-tab">
+                        <div class="master-controls">
+                            <div class="form-row">
+                                <div class="form-group" style="flex: 1;">
+                                    <input type="text" id="new-inspector-name" placeholder="担当者名を入力" style="width: 100%;">
+                                </div>
+                                <div class="form-group">
+                                    <button id="add-inspector-btn" class="btn btn-primary">追加</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="inspectors-master-list" class="master-list"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- マンホール編集フォームモーダル -->
+        <div id="manhole-edit-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="manhole-form-title">マンホール編集</h2>
+                    <button class="close-btn" id="close-manhole-edit-modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="manhole-edit-form" class="manhole-form">
+                        <div class="form-group">
+                            <label for="edit-manhole-name">マンホール名:</label>
+                            <input type="text" id="edit-manhole-name" name="name" required>
+                        </div>
+                        
+                        <div class="form-section">
+                            <h3>ポンプ定格電流 (A)</h3>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="rated-current-1">No1定格電流:</label>
+                                    <input type="number" id="rated-current-1" name="ratedCurrent1" step="0.1" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="rated-current-2">No2定格電流:</label>
+                                    <input type="number" id="rated-current-2" name="ratedCurrent2" step="0.1" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3>ポンプ出力 (kW)</h3>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="output-kw-1">No1出力:</label>
+                                    <input type="number" id="output-kw-1" name="outputKw1" step="0.1" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="output-kw-2">No2出力:</label>
+                                    <input type="number" id="output-kw-2" name="outputKw2" step="0.1" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3>警告範囲設定</h3>
+                            <div class="warning-range-container">
+                                <div class="warning-range-section">
+                                    <h4>No1電流警告範囲 (A)</h4>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="current-warning-min-1">最小値:</label>
+                                            <input type="number" id="current-warning-min-1" name="currentWarningMin1" step="0.1" placeholder="例: 13.5">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="current-warning-max-1">最大値:</label>
+                                            <input type="number" id="current-warning-max-1" name="currentWarningMax1" step="0.1" placeholder="例: 16.5">
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="warning-range-section">
+                                    <h4>No2電流警告範囲 (A)</h4>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="current-warning-min-2">最小値:</label>
+                                            <input type="number" id="current-warning-min-2" name="currentWarningMin2" step="0.1" placeholder="例: 13.5">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="current-warning-max-2">最大値:</label>
+                                            <input type="number" id="current-warning-max-2" name="currentWarningMax2" step="0.1" placeholder="例: 16.5">
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3>位置情報</h3>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="latitude">緯度:</label>
+                                    <input type="number" id="latitude" name="latitude" step="0.0000001" placeholder="例: 37.1682890">
+                                </div>
+                                <div class="form-group">
+                                    <label for="longitude">経度:</label>
+                                    <input type="number" id="longitude" name="longitude" step="0.0000001" placeholder="例: 138.9184600">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3>点検項目設定</h3>
+                            <div class="inspection-items-header">
+                                <p>このマンホールで使用する点検項目を設定できます。</p>
+                                <div class="inspection-items-controls">
+                                    <button type="button" id="add-inspection-item-btn" class="btn btn-primary">点検項目を追加</button>
+                                    <div class="copy-paste-controls">
+                                        <select id="copy-source-manhole" class="form-control">
+                                            <option value="">コピー元マンホールを選択</option>
+                                        </select>
+                                        <button type="button" id="copy-inspection-items-btn" class="btn btn-secondary">点検項目をコピー</button>
+                                        <button type="button" id="paste-inspection-items-btn" class="btn btn-secondary" disabled>点検項目を貼り付け</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="inspection-items-list" class="inspection-items-list">
+                                <!-- 点検項目リストはJavaScriptで動的生成 -->
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" id="cancel-manhole-edit">キャンセル</button>
+                            <button type="submit" class="btn btn-primary">保存</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- 点検項目編集モーダル -->
+        <div id="inspection-item-edit-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="inspection-item-form-title">点検項目編集</h2>
+                    <button class="close-btn" id="close-inspection-item-edit-modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="inspection-item-edit-form" class="inspection-item-form">
+                        <div class="form-group">
+                            <label for="item-name">項目名:</label>
+                            <input type="text" id="item-name" name="name" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="item-type">項目タイプ:</label>
+                            <select id="item-type" name="type" required>
+                                <option value="">選択してください</option>
+                                <option value="checkbox">チェックボックス</option>
+                                <option value="selection">選択肢</option>
+                                <option value="numeric">数値入力</option>
+                                <option value="text">文字列入力</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="item-category">カテゴリ:</label>
+                            <input type="text" id="item-category" name="category" placeholder="例: 運転状況、設備状況">
+                        </div>
+
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="item-required" name="required">
+                                必須項目
+                            </label>
+                        </div>
+
+                        <!-- 選択肢設定（selection type用） -->
+                        <div id="selection-settings" class="type-settings" style="display: none;">
+                            <h4>選択肢設定</h4>
+                            <div class="form-group">
+                                <label for="selection-options">選択肢（改行区切り）:</label>
+                                <textarea id="selection-options" rows="4" placeholder="例:&#10;良好&#10;要注意&#10;要修理&#10;緊急対応必要"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- 数値設定（numeric type用） -->
+                        <div id="numeric-settings" class="type-settings" style="display: none;">
+                            <h4>数値設定</h4>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="decimal-places">小数点以下桁数:</label>
+                                    <input type="number" id="decimal-places" min="0" max="5" value="2">
+                                </div>
+                                <div class="form-group">
+                                    <label for="numeric-unit">単位:</label>
+                                    <input type="text" id="numeric-unit" placeholder="例: mm/s, ℃, %">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>警告範囲設定</label>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="warning-min">最小値:</label>
+                                        <input type="number" id="warning-min" step="0.01">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="warning-max">最大値:</label>
+                                        <input type="number" id="warning-max" step="0.01">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 文字列設定（text type用） -->
+                        <div id="text-settings" class="type-settings" style="display: none;">
+                            <h4>文字列設定</h4>
+                            <div class="form-group">
+                                <label for="max-length">最大文字数:</label>
+                                <input type="number" id="max-length" min="1" max="1000" value="500">
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" id="cancel-inspection-item-edit">キャンセル</button>
+                            <button type="submit" class="btn btn-primary">保存</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- データ出力モーダル -->
+        <div id="export-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>データ出力</h2>
+                    <button class="close-btn" id="close-export-modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="export-options">
+                        <button id="export-csv-btn" class="btn btn-primary">CSV出力</button>
+                        <button id="export-backup-btn" class="btn btn-secondary">バックアップ出力</button>
+                        <button id="import-backup-btn" class="btn btn-secondary">バックアップ復元</button>
+                        <input type="file" id="backup-file-input" accept=".json" style="display: none;">
+                    </div>
+                    
+                    <div class="export-section">
+                        <h3>点検履歴管理</h3>
+                        <div class="inspection-backup-options">
+                            <button id="export-inspections-btn" class="btn btn-primary">点検履歴バックアップ</button>
+                            <button id="import-inspections-btn" class="btn btn-secondary">点検履歴復元</button>
+                            <button id="merge-inspections-btn" class="btn btn-secondary">点検履歴マージ</button>
+                            <input type="file" id="inspections-file-input" accept=".json" style="display: none;">
+                        </div>
+                        <div class="merge-options" id="merge-options" style="display: none; margin-top: 10px;">
+                            <label for="merge-mode">重複データの処理:</label>
+                            <select id="merge-mode">
+                                <option value="skip">スキップ（重複を無視）</option>
+                                <option value="update">更新（既存データを上書き）</option>
+                                <option value="duplicate">重複許可（別データとして追加）</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="export-section">
+                        <h3>マスタファイル管理</h3>
+                        <div class="master-file-options">
+                            <button id="export-manholes-btn" class="btn btn-secondary">マンホールマスタ出力</button>
+                            <button id="import-manholes-btn" class="btn btn-secondary">マンホールマスタ読込</button>
+                            <input type="file" id="manholes-file-input" accept=".json" style="display: none;">
+                        </div>
+                        <div class="master-file-options">
+                            <button id="export-inspectors-btn" class="btn btn-secondary">担当者マスタ出力</button>
+                            <button id="import-inspectors-btn" class="btn btn-secondary">担当者マスタ読込</button>
+                            <input type="file" id="inspectors-file-input" accept=".json" style="display: none;">
+                        </div>
+                    </div>
+                    
+                    <div class="export-section">
+                        <h3>月別一括印刷</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="print-year">年</label>
+                                <select id="print-year">
+                                    <!-- JavaScriptで動的に生成 -->
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="print-month">月</label>
+                                <select id="print-month">
+                                    <option value="1">1月</option>
+                                    <option value="2">2月</option>
+                                    <option value="3">3月</option>
+                                    <option value="4">4月</option>
+                                    <option value="5">5月</option>
+                                    <option value="6">6月</option>
+                                    <option value="7">7月</option>
+                                    <option value="8">8月</option>
+                                    <option value="9">9月</option>
+                                    <option value="10">10月</option>
+                                    <option value="11">11月</option>
+                                    <option value="12">12月</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="print-options">
+                            <button id="monthly-print-btn" class="btn btn-primary">印刷実行</button>
+                            <button id="monthly-pdf-btn" class="btn btn-secondary">PDF出力</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- QRスキャンモーダル -->
+        <div id="qr-scan-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>QRコードスキャン</h2>
+                    <button class="close-btn" id="close-qr-scan-modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <video id="qr-video" style="width: 100%; max-width: 400px;"></video>
+                    <div id="qr-result"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 担当者管理モーダル -->
+        <div id="inspector-management-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>担当者管理</h2>
+                    <button class="close-btn" id="close-inspector-modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="inspector-form">
+                        <h3>新しい担当者を追加</h3>
+                        <div class="form-row">
+                            <input type="text" id="new-inspector-name" placeholder="担当者名" required>
+                            <button type="button" id="add-inspector-btn" class="btn btn-primary">追加</button>
+                        </div>
+                    </div>
+                    <div class="inspector-list">
+                        <h3>登録済み担当者</h3>
+                        <div id="inspector-list-container">
+                            <!-- JavaScriptで動的に生成 -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 写真表示モーダル -->
+        <div id="photo-view-modal" class="modal">
+            <div class="modal-content photo-modal-content">
+                <div class="modal-header">
+                    <h2 id="photo-modal-title">点検写真</h2>
+                    <button class="close-btn" id="close-photo-modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div id="photo-gallery" class="photo-gallery">
+                        <!-- JavaScriptで動的に生成 -->
+                    </div>
+                    <div id="photo-detail-view" class="photo-detail-view" style="display: none;">
+                        <div class="photo-detail-header">
+                            <button id="photo-detail-back" class="btn btn-secondary">戻る</button>
+                            <span id="photo-detail-info"></span>
+                        </div>
+                        <div class="photo-detail-content">
+                            <img id="photo-detail-image" src="" alt="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 月別印刷レイアウト -->
+    <div id="monthly-print-layout" class="monthly-print-layout">
+        <div class="print-header">
+            <h1>マンホールポンプ点検履歴</h1>
+            <p class="period" id="print-period"></p>
+        </div>
+        <div id="print-content" class="print-inspection-summary">
+            <!-- JavaScriptで動的に生成 -->
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="js/FileManager.js"></script>
+    <script src="js/DatabaseManager.js"></script>
+    <script src="js/DataManager.js"></script>
+    <script src="js/managers/NotificationManager.js"></script>
+    <script src="js/managers/NavigationManager.js"></script>
+    <script src="js/managers/PhotoManager.js"></script>
+    <script src="js/managers/ModalManager.js"></script>
+    <script src="js/managers/FormManager.js"></script>
+    <script src="js/managers/GraphManager.js"></script>
+    <script src="js/UIManager.js"></script>
+    <script src="js/MapManager.js"></script>
+    <script src="js/VoiceManager.js"></script>
+    <script src="js/QRManager.js"></script>
+    <script src="js/ExportManager.js"></script>
+    <script src="app-refactored.js"></script>
+</body>
+</html>

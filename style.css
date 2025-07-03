@@ -1,0 +1,2432 @@
+/* リセットCSS */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* カラーパレット - 青グレー基調 */
+:root {
+    --primary-color: #546E7A;        /* 青グレー */
+    --primary-dark: #37474F;         /* 深い青グレー */
+    --secondary-color: #78909C;      /* ミディアム青グレー */
+    --success-color: #81C784;        /* ライトグリーン（成功色は維持） */
+    --warning-color: #FF9800;        /* 濃いオレンジ */
+    --error-color: #F44336;          /* 濃いレッド */
+    --background-color: #E3F2FD;     /* 薄い青背景 */
+    --surface-color: #FFFFFF;        /* 白 */
+    --text-primary: #263238;         /* 濃い青グレーテキスト */
+    --text-secondary: #37474F;       /* 青グレーテキスト */
+    --border-color: #B0BEC5;         /* 薄い青グレーボーダー */
+    --accent-light: #E1F5FE;         /* 薄い青アクセント */
+    --accent-medium: #B3E5FC;        /* ミディアム青アクセント */
+    --shadow: 0 2px 8px rgba(55,71,79,0.2);
+    --shadow-hover: 0 4px 16px rgba(55,71,79,0.3);
+}
+
+/* 基本スタイル */
+body {
+    font-family: 'Noto Sans JP', sans-serif;
+    line-height: 1.6;
+    color: var(--text-primary);
+    background-color: var(--background-color);
+    background-image: url('icon/back.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    font-size: 18px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 16px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ヘッダー */
+header {
+    background: var(--surface-color);
+    box-shadow: var(--shadow);
+    padding: 16px 0;
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.header-main {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.header-logo {
+    height: 40px;
+    width: auto;
+    object-fit: contain;
+}
+
+header h1 {
+    color: var(--primary-color);
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.header-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+/* メインコンテンツ */
+main {
+    flex: 1;
+}
+
+/* タブ */
+.tab-container {
+    background: var(--surface-color);
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+}
+
+.tabs {
+    display: flex;
+    background: var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    transition: all 0.3s ease;
+    min-height: 68px;
+    border-radius: 8px;
+}
+
+.tab-btn:hover {
+    background: var(--accent-medium);
+    color: var(--primary-color);
+}
+
+.tab-btn.active {
+    background: var(--primary-color);
+    color: white;
+}
+
+.tab-content {
+    display: none;
+    padding: 24px;
+    min-height: 500px;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* フォーム */
+.form-section {
+    margin-bottom: 32px;
+    padding: 20px;
+    background: var(--accent-light);
+    border-radius: 12px;
+    border-left: 4px solid var(--primary-color);
+    box-shadow: var(--shadow);
+}
+
+.form-section:last-child {
+    margin-bottom: 0;
+}
+
+.form-section h2 {
+    color: var(--primary-color);
+    font-size: 1.5rem;
+    margin-bottom: 16px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.form-section h2::before {
+    content: "🟢";
+    font-size: 0.8em;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+    color: var(--text-primary);
+    font-size: 1.1rem;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 14px;
+    border: 2px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 1.2rem;
+    transition: border-color 0.3s ease;
+    background: var(--surface-color);
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+/* ラジオボタングループ */
+.radio-group {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.radio-group label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 400;
+    cursor: pointer;
+    margin-bottom: 0;
+}
+
+.radio-group input[type="radio"] {
+    width: auto;
+    margin: 0;
+}
+
+/* チェックボックスグリッド */
+.checkbox-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+}
+
+.checkbox-item {
+    padding: 20px;
+    background: var(--surface-color);
+    border-radius: 8px;
+    border: 2px solid var(--border-color);
+    margin-bottom: 12px;
+    transition: all 0.3s ease;
+}
+
+.checkbox-item:hover {
+    border-color: var(--primary-color);
+    box-shadow: var(--shadow);
+}
+
+.checkbox-item label:first-child {
+    font-weight: 500;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.checkbox-group {
+    display: flex;
+    gap: 16px;
+}
+
+.checkbox-group label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 500;
+    font-size: 1.2rem;
+    cursor: pointer;
+    margin-bottom: 0;
+    padding: 8px;
+    border-radius: 6px;
+    transition: background-color 0.3s ease;
+}
+
+.checkbox-group label:hover {
+    background: var(--background-color);
+}
+
+/* カスタムチェックボックススタイル */
+input[type="checkbox"] {
+    width: 24px;
+    height: 24px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    border: 3px solid var(--primary-color);
+    border-radius: 4px;
+    background: var(--surface-color);
+    cursor: pointer;
+    position: relative;
+    margin-right: 12px;
+    margin: 0;
+    transition: all 0.3s ease;
+}
+
+input[type="checkbox"]:checked {
+    background: var(--primary-color);
+    border-color: var(--primary-dark);
+}
+
+input[type="checkbox"]:checked::after {
+    content: '✓';
+    position: absolute;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    top: -2px;
+    left: 3px;
+}
+
+input[type="checkbox"]:hover {
+    border-color: var(--primary-dark);
+    box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+}
+
+input[type="checkbox"]:focus {
+    outline: 3px solid var(--secondary-color);
+    outline-offset: 2px;
+}
+
+/* 単位付き入力 */
+.unit-input {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.unit-input .input-with-voice {
+    flex: 1;
+}
+
+.unit-input input {
+    flex: 1;
+}
+
+.unit-input select {
+    width: 80px;
+    flex-shrink: 0;
+}
+
+/* 差分表示 */
+.diff-display {
+    display: inline-block;
+    margin-left: 8px;
+    padding: 4px 8px;
+    background: var(--success-color);
+    color: white;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+/* 警告表示 */
+.warning {
+    display: none;
+    margin-top: 6px;
+    padding: 10px 14px;
+    background-color: rgba(244, 67, 54, 0.1);
+    border: 1px solid var(--error-color);
+    border-radius: 6px;
+    color: var(--error-color);
+    font-size: 0.95rem;
+    font-weight: 500;
+    line-height: 1.5;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+    min-height: 40px;
+    box-sizing: border-box;
+}
+
+/* 内容がある時のみ警告を表示 */
+.warning:not(:empty) {
+    display: block;
+}
+
+/* 電流情報表示 */
+.current-info {
+    margin-top: 4px;
+    font-size: 1rem;
+    color: var(--text-secondary);
+}
+
+/* ボタン */
+.btn {
+    padding: 16px 32px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.3rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;   
+    gap: 8px;
+    min-height: 56px;
+    box-shadow: var(--shadow);
+}
+
+.btn-primary {
+    background: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--primary-dark);
+    box-shadow: var(--shadow-hover);
+}
+
+.btn-secondary {
+    background: var(--accent-medium);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+    background: var(--secondary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-photo {
+    background: var(--secondary-color);
+    color: var(--text-primary);
+}
+
+.btn-photo:hover {
+    background: var(--primary-color);
+    color: white;
+}
+
+/* 担当者管理 */
+.inspector-selection {
+    display: flex;
+    gap: 8px;
+    align-items: stretch;
+}
+
+.inspector-selection select {
+    flex: 1;
+}
+
+.inspector-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px;
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    margin-bottom: 8px;
+}
+
+.inspector-name {
+    font-weight: 500;
+}
+
+.inspector-form {
+    margin-bottom: 24px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.no-data {
+    text-align: center;
+    color: var(--text-secondary);
+    font-style: italic;
+    padding: 20px;
+}
+
+.form-actions {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border-color);
+}
+
+/* 写真セクション */
+.photo-section {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.photo-preview {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 16px;
+    margin-top: 16px;
+}
+
+.photo-item {
+    position: relative;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+}
+
+.photo-item img {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+}
+
+.photo-item .delete-btn {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    background: var(--error-color);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 履歴セクション */
+.history-controls {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+}
+
+.history-controls .form-group {
+    margin-bottom: 0;
+    min-width: 200px;
+}
+
+.history-list {
+    display: grid;
+    gap: 16px;
+}
+
+.history-item {
+    background: var(--background-color);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.history-item:hover {
+    box-shadow: var(--shadow);
+    transform: translateY(-2px);
+}
+
+.history-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.history-item-actions {
+    display: flex;
+    gap: 4px;
+}
+
+.btn-icon {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 4px;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    min-width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-icon:hover {
+    background: var(--border-color);
+}
+
+.btn-icon.btn-danger:hover {
+    background: var(--error-color);
+    color: white;
+}
+
+.history-item-title {
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.history-item-date {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.history-item-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.summary-item {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.summary-label {
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+/* グラフセクション */
+.graph-controls {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+}
+
+.graph-controls .form-group {
+    margin-bottom: 0;
+    min-width: 200px;
+}
+
+.graph-container {
+    background: var(--surface-color);
+    border-radius: 6px;
+    padding: 20px;
+    margin-bottom: 24px;
+    box-shadow: var(--shadow);
+    overflow-x: auto;
+}
+
+.health-status {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+}
+
+.health-card {
+    background: var(--surface-color);
+    border-radius: 6px;
+    padding: 16px;
+    box-shadow: var(--shadow);
+    text-align: center;
+}
+
+.health-title {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+}
+
+.health-value {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.health-good {
+    color: var(--success-color);
+}
+
+.health-warning {
+    color: var(--warning-color);
+}
+
+.health-error {
+    color: var(--error-color);
+}
+
+/* モーダル */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+}
+
+.modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.modal-content {
+    background: var(--surface-color);
+    border-radius: 8px;
+    box-shadow: var(--shadow-hover);
+    width: 100%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.modal-header h2 {
+    color: var(--primary-color);
+    font-size: 1.2rem;
+    margin: 0;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--text-secondary);
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.3s ease;
+}
+
+.close-btn:hover {
+    background: var(--border-color);
+}
+
+.modal-body {
+    padding: 24px;
+}
+
+/* マスタタブ */
+.master-tabs {
+    display: flex;
+    background: var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+    margin: -24px -24px 24px -24px;
+}
+
+.master-tab-btn {
+    flex: 1;
+    padding: 16px 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    transition: all 0.3s ease;
+    border-radius: 0;
+}
+
+.master-tab-btn:hover {
+    background: var(--accent-medium);
+    color: var(--primary-color);
+}
+
+.master-tab-btn.active {
+    background: var(--primary-color);
+    color: white;
+}
+
+.master-tab-content {
+    display: none;
+}
+
+.master-tab-content.active {
+    display: block;
+}
+
+/* マスタデータ通知 */
+.master-data-notice {
+    background: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-radius: 6px;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    color: #856404;
+}
+
+.master-data-notice p {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.master-data-notice strong {
+    color: #d63031;
+}
+
+/* 警告範囲設定 */
+.warning-range-container {
+    display: grid;
+    gap: 20px;
+}
+
+.warning-range-section {
+    background: var(--background-color);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 16px;
+}
+
+.warning-range-section h4 {
+    color: var(--primary-color);
+    margin: 0 0 12px 0;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+/* 写真セクション */
+.photo-section {
+    margin-top: 16px;
+}
+
+.photo-preview-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 12px;
+    margin-top: 16px;
+    min-height: 60px;
+    padding: 12px;
+    border: 2px dashed var(--border-color);
+    border-radius: 8px;
+    background-color: var(--accent-light);
+}
+
+.photo-preview-item {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.photo-thumbnail {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 2px solid var(--border-color);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.photo-thumbnail:hover {
+    border-color: var(--primary-color);
+    transform: scale(1.05);
+}
+
+.photo-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.remove-photo-btn {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--error-color);
+    color: white;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.remove-photo-btn:hover {
+    background: #d32f2f;
+    transform: scale(1.1);
+}
+
+.photo-name {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    text-align: center;
+    word-break: break-all;
+    max-width: 100px;
+}
+
+#photo-count {
+    color: var(--primary-color);
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+/* 写真表示モーダル */
+.photo-modal-content {
+    max-width: 90vw;
+    max-height: 90vh;
+}
+
+.photo-detail-content {
+    max-width: 80vw;
+    max-height: 90vh;
+}
+
+.photo-detail-view {
+    text-align: center;
+    padding: 16px;
+}
+
+.photo-info-detail {
+    margin-top: 16px;
+    text-align: left;
+    background: var(--accent-light);
+    padding: 12px;
+    border-radius: 6px;
+}
+
+.photo-info-detail p {
+    margin: 4px 0;
+    font-size: 0.9rem;
+}
+
+.photo-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 16px;
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+.photo-thumbnail {
+    position: relative;
+    aspect-ratio: 1;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.photo-thumbnail:hover {
+    border-color: var(--primary-color);
+    transform: scale(1.05);
+}
+
+.photo-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.photo-thumbnail-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 4px 8px;
+    font-size: 0.8rem;
+    text-align: center;
+}
+
+.photo-detail-view {
+    text-align: center;
+}
+
+.photo-detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.photo-detail-content {
+    max-height: 70vh;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.photo-detail-content img {
+    max-width: 100%;
+    max-height: 70vh;
+    object-fit: contain;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+}
+
+.photo-count-text.has-photos {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.no-photos-message {
+    text-align: center;
+    color: var(--text-secondary);
+    padding: 40px;
+    font-size: 1.1rem;
+}
+
+/* マスタリスト */
+.master-controls {
+    margin-bottom: 24px;
+}
+
+.master-list {
+    display: grid;
+    gap: 16px;
+}
+
+.master-item {
+    background: var(--background-color);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 16px;
+}
+
+.master-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.master-item-name {
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.master-item-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.master-item-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 8px;
+    font-size: 0.9rem;
+}
+
+.master-detail {
+    color: var(--text-secondary);
+}
+
+.master-detail-label {
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+/* アラート表示 */
+.alert-container {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    z-index: 1001;
+    max-width: 350px;
+}
+
+.alert {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    border-radius: 6px;
+    box-shadow: var(--shadow-hover);
+    animation: slideIn 0.3s ease;
+}
+
+.alert-error {
+    background: #FFEBEE;
+    border-left: 4px solid var(--error-color);
+    color: #C62828;
+}
+
+.alert-warning {
+    background: #FFF3E0;
+    border-left: 4px solid var(--warning-color);
+    color: #E65100;
+}
+
+.alert-success {
+    background: var(--accent-light);
+    border-left: 4px solid var(--success-color);
+    color: var(--text-primary);
+}
+
+.alert-close {
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    color: inherit;
+    margin-left: auto;
+    padding: 2px;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* 音声入力 */
+.input-with-voice {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.input-with-voice input {
+    flex: 1;
+}
+
+.voice-btn {
+    background: var(--secondary-color);
+    border: none;
+    border-radius: 8px;
+    padding: 12px;
+    cursor: pointer;
+    font-size: 18px;
+    min-width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow);
+}
+
+.voice-btn:hover {
+    background: var(--primary-color);
+    color: white;
+}
+
+.voice-btn.listening {
+    background: var(--error-color);
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+/* 地図表示 */
+.map-controls {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 16px;
+    align-items: end;
+}
+
+.map-controls .form-group {
+    margin-bottom: 0;
+}
+
+.map-controls .form-group input[type="number"] {
+    font-family: 'Noto Sans JP', monospace;
+}
+
+.map-container {
+    background: var(--surface-color);
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    margin-bottom: 24px;
+}
+
+#map {
+    height: 400px !important;
+    width: 100% !important;
+    border-radius: 6px;
+    position: relative;
+    z-index: 1;
+}
+
+.leaflet-container {
+    height: 400px !important;
+    width: 100% !important;
+    border-radius: 6px;
+}
+
+.current-location-marker {
+    background: transparent !important;
+    border: none !important;
+}
+
+/* Leafletのデフォルトスタイルとの競合を防ぐ */
+.leaflet-control-container .leaflet-routing-container-hide {
+    display: none;
+}
+
+.leaflet-popup-content {
+    margin: 8px 12px;
+    line-height: 1.4;
+}
+
+.leaflet-popup-content .btn {
+    margin-top: 8px;
+    padding: 6px 12px;
+    font-size: 0.9rem;
+}
+
+/* QRコード関連 */
+.qr-controls {
+    background: var(--background-color);
+    padding: 20px;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+}
+
+.qr-controls h3 {
+    color: var(--primary-color);
+    margin-bottom: 16px;
+    font-size: 1.1rem;
+}
+
+.qr-actions {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.qr-display {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+}
+
+.qr-item {
+    background: var(--surface-color);
+    padding: 16px;
+    border-radius: 6px;
+    text-align: center;
+    box-shadow: var(--shadow);
+}
+
+.qr-item h4 {
+    color: var(--primary-color);
+    margin-bottom: 12px;
+    font-size: 1rem;
+}
+
+.qr-item canvas {
+    max-width: 100%;
+    height: auto;
+}
+
+.qr-item .download-btn {
+    margin-top: 8px;
+    padding: 6px 12px;
+    font-size: 0.85rem;
+}
+
+/* エクスポートオプション */
+.export-options {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* レスポンシブデザイン */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 12px;
+    }
+    
+    header {
+        padding: 12px 0;
+        margin-bottom: 16px;
+    }
+    
+    header h1 {
+        font-size: 1.3rem;
+    }
+    
+    .tab-btn {
+        padding: 12px 8px;
+        font-size: 0.9rem;
+        min-height: 50px;
+    }
+    
+    .tab-content {
+        padding: 16px;
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    
+    .form-section {
+        margin-bottom: 24px;
+        padding-bottom: 16px;
+    }
+    
+    .form-section h2 {
+        font-size: 1.1rem;
+        margin-bottom: 12px;
+    }
+    
+    .checkbox-grid {
+        gap: 12px;
+    }
+    
+    .checkbox-item {
+        padding: 16px;
+    }
+    
+    .radio-group,
+    .checkbox-group {
+        gap: 16px;
+    }
+    
+    input[type="checkbox"] {
+        width: 28px;
+        height: 28px;
+        margin-right: 16px;
+    }
+    
+    input[type="checkbox"]:checked::after {
+        font-size: 20px;
+        top: -1px;
+        left: 4px;
+    }
+    
+    .checkbox-group label {
+        font-size: 1.3rem;
+        padding: 12px;
+        gap: 16px;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .btn {
+        width: 100%;
+        padding: 18px 24px;
+        min-height: 60px;
+    }
+    
+    .history-controls,
+    .graph-controls {
+        flex-direction: column;
+    }
+    
+    .history-controls .form-group,
+    .graph-controls .form-group {
+        min-width: auto;
+    }
+    
+    .history-item-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+    
+    .history-item-actions {
+        width: 100%;
+        justify-content: flex-end;
+    }
+    
+    .history-item-summary {
+        grid-template-columns: 1fr;
+    }
+    
+    .health-status {
+        grid-template-columns: 1fr;
+    }
+    
+    .modal-content {
+        margin: 0;
+        border-radius: 8px 8px 0 0;
+        max-height: 95vh;
+    }
+    
+    .modal-header,
+    .modal-body {
+        padding: 16px;
+    }
+    
+    .master-item-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .master-item-actions {
+        width: 100%;
+        justify-content: flex-end;
+    }
+    
+    .master-item-details {
+        grid-template-columns: 1fr;
+    }
+    
+    .export-options {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 0 8px;
+    }
+    
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        padding: 10px;
+    }
+    
+    .btn {
+        padding: 12px 16px;
+        font-size: 0.9rem;
+    }
+    
+    .tab-btn {
+        padding: 10px 6px;
+        font-size: 0.85rem;
+    }
+    
+    .photo-preview {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    }
+    
+    .photo-item img {
+        height: 100px;
+    }
+    
+    /* 警告表示のモバイル対応 */
+    .warning {
+        font-size: 1rem;
+        padding: 12px 16px;
+        min-height: 45px;
+        line-height: 1.6;
+    }
+    
+    /* 参考情報のモバイル対応 */
+    .reference-info {
+        font-size: 0.9rem;
+        padding: 10px 14px;
+        min-height: 40px;
+        line-height: 1.5;
+    }
+}
+
+/* ダークモード対応（システム設定に基づく） */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background-color: #121212;
+        --surface-color: #1E1E1E;
+        --text-primary: #FFFFFF;
+        --text-secondary: #AAAAAA;
+        --border-color: #333333;
+    }
+    
+    .checkbox-item,
+    .history-item,
+    .master-item {
+        background: #2A2A2A;
+    }
+}
+
+/* マンホール編集フォーム */
+.manhole-form {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.form-section {
+    margin-bottom: 24px;
+    padding: 16px;
+    background: var(--background-color);
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+}
+
+.form-section h3 {
+    margin: 0 0 12px 0;
+    color: var(--primary-color);
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 4px;
+    color: var(--text-primary);
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 0.9rem;
+    background: var(--surface-color);
+    color: var(--text-primary);
+    transition: border-color 0.3s ease;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.1);
+}
+
+.form-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border-color);
+}
+
+.master-list {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.master-item {
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    margin-bottom: 12px;
+    padding: 16px;
+    transition: all 0.3s ease;
+}
+
+.master-item:hover {
+    box-shadow: var(--shadow);
+}
+
+.master-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.master-item-name {
+    font-weight: 600;
+    color: var(--primary-color);
+    font-size: 1rem;
+}
+
+.master-item-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.master-item-actions .btn {
+    padding: 4px 8px;
+    font-size: 0.8rem;
+    min-width: auto;
+}
+
+.master-item-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 8px;
+}
+
+.master-detail {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.master-detail-label {
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+/* 点検項目コピー・ペースト */
+.inspection-items-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.copy-paste-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.copy-paste-controls select {
+    min-width: 200px;
+    flex: 1;
+}
+
+.copy-paste-controls button {
+    white-space: nowrap;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .master-item-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    
+    .master-item-details {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* 月別印刷レイアウト */
+.export-section {
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border-color);
+}
+
+.export-section h3 {
+    color: var(--primary-color);
+    margin-bottom: 16px;
+    font-size: 1.1rem;
+}
+
+.print-options {
+    display: flex;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+/* コンパクトな印刷レイアウト */
+.monthly-print-layout {
+    display: none;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 10px;
+    line-height: 1.2;
+}
+
+.monthly-print-layout.printing {
+    display: block;
+}
+
+.print-header {
+    text-align: center;
+    margin-bottom: 16px;
+    border-bottom: 2px solid #333;
+    padding-bottom: 8px;
+}
+
+.print-header h1 {
+    font-size: 16px;
+    margin: 0 0 4px 0;
+    color: #333;
+}
+
+.print-header .period {
+    font-size: 12px;
+    color: #666;
+    margin: 0;
+}
+
+.print-inspection-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.print-manhole-section {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 8px;
+    break-inside: avoid;
+}
+
+.print-manhole-header {
+    background: #f0f0f0;
+    padding: 4px 8px;
+    margin: -8px -8px 8px -8px;
+    border-radius: 4px 4px 0 0;
+    font-weight: bold;
+    font-size: 11px;
+    color: #333;
+}
+
+.print-inspection-item {
+    margin-bottom: 8px;
+    padding: 4px;
+    border-left: 3px solid #e0e0e0;
+    background: #fafafa;
+}
+
+.print-inspection-date {
+    font-weight: bold;
+    color: #2196F3;
+    font-size: 10px;
+}
+
+.print-inspection-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px;
+    margin-top: 4px;
+    font-size: 9px;
+}
+
+.print-detail-item {
+    display: flex;
+    justify-content: space-between;
+}
+
+.print-detail-label {
+    font-weight: 500;
+    color: #555;
+}
+
+.print-detail-value {
+    color: #333;
+}
+
+.print-status-indicators {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px;
+    margin-top: 4px;
+}
+
+.print-status-badge {
+    padding: 1px 4px;
+    border-radius: 2px;
+    font-size: 8px;
+    font-weight: bold;
+}
+
+.print-status-good {
+    background: #e8f5e8;
+    color: #2e7d32;
+}
+
+.print-status-bad {
+    background: #ffebee;
+    color: #c62828;
+}
+
+.print-remarks {
+    margin-top: 4px;
+    padding: 4px;
+    background: #fff3e0;
+    border-radius: 2px;
+    font-size: 8px;
+    color: #e65100;
+    border-left: 2px solid #ff9800;
+}
+
+/* 印刷専用スタイル */
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    
+    .monthly-print-layout.printing,
+    .monthly-print-layout.printing * {
+        visibility: visible;
+    }
+    
+    .monthly-print-layout.printing {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        margin: 0;
+        padding: 10mm;
+    }
+    
+    .print-manhole-section {
+        page-break-inside: avoid;
+        margin-bottom: 8px;
+    }
+    
+    .print-header {
+        page-break-after: avoid;
+    }
+}
+
+/* 印刷スタイル */
+@media print {
+    .header-actions,
+    .tabs,
+    .form-actions,
+    .btn {
+        display: none !important;
+    }
+    
+    .tab-content {
+        display: block !important;
+        padding: 0;
+    }
+    
+    .container {
+        max-width: none;
+        padding: 0;
+    }
+    
+    .form-section {
+        break-inside: avoid;
+        margin-bottom: 20px;
+    }
+}
+
+/* 点検項目設定用スタイル */
+.inspection-items-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 16px;
+    background: var(--background-color);
+    border-radius: 8px;
+}
+
+.inspection-items-header p {
+    margin: 0;
+    color: var(--text-secondary);
+}
+
+.inspection-items-list {
+    min-height: 200px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 16px;
+    background: var(--surface-color);
+}
+
+.inspection-item {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    margin-bottom: 8px;
+    background: #f8f9fa;
+    border-radius: 6px;
+    border-left: 4px solid var(--primary-color);
+    position: relative;
+}
+
+.inspection-item:last-child {
+    margin-bottom: 0;
+}
+
+.inspection-item.dragging {
+    opacity: 0.5;
+    transform: rotate(2deg);
+}
+
+.inspection-item-handle {
+    cursor: move;
+    color: var(--text-secondary);
+    margin-right: 12px;
+    font-size: 18px;
+}
+
+.inspection-item-content {
+    flex: 1;
+}
+
+.inspection-item-name {
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.inspection-item-meta {
+    font-size: 14px;
+    color: var(--text-secondary);
+    display: flex;
+    gap: 16px;
+}
+
+.inspection-item-type {
+    background: var(--primary-color);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+}
+
+.inspection-item-type.checkbox { background: #4CAF50; }
+.inspection-item-type.selection { background: #FF9800; }
+.inspection-item-type.numeric { background: #2196F3; }
+.inspection-item-type.text { background: #9C27B0; }
+
+.inspection-item-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.inspection-item-actions .btn {
+    padding: 6px 12px;
+    font-size: 14px;
+    min-width: auto;
+}
+
+.btn-icon {
+    padding: 6px;
+    min-width: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 点検項目編集フォーム */
+.inspection-item-form .form-group {
+    margin-bottom: 20px;
+}
+
+.type-settings {
+    background: var(--background-color);
+    padding: 16px;
+    border-radius: 8px;
+    margin-top: 16px;
+}
+
+.type-settings h4 {
+    margin-bottom: 16px;
+    color: var(--primary-color);
+}
+
+.inspection-item-order {
+    width: 60px;
+    text-align: center;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+/* ドラッグ&ドロップ用スタイル */
+.sortable-ghost {
+    opacity: 0.4;
+    background: var(--primary-color);
+    color: white;
+}
+
+.sortable-chosen {
+    cursor: grabbing;
+}
+
+/* 空リスト表示 */
+.inspection-items-empty {
+    text-align: center;
+    padding: 40px;
+    color: var(--text-secondary);
+}
+
+.inspection-items-empty-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+}
+
+/* アニメーション */
+.inspection-item {
+    transition: all 0.2s ease;
+}
+
+.inspection-item:hover {
+    background: #e3f2fd;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* 必須項目表示 */
+.inspection-item-required {
+    color: var(--error-color);
+    font-weight: 600;
+    font-size: 12px;
+}
+
+/* カテゴリ表示 */
+.inspection-item-category {
+    background: var(--secondary-color);
+    color: var(--text-primary);
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+}
+
+/* 数値項目の設定表示 */
+.inspection-item-settings {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-top: 4px;
+}
+
+/* 動的点検項目用スタイル */
+.dynamic-inspection-items {
+    min-height: 200px;
+}
+
+.no-manhole-selected {
+    text-align: center;
+    padding: 40px;
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+.dynamic-item {
+    margin-bottom: 20px;
+    padding: 16px;
+    background: var(--surface-color);
+    border-radius: 8px;
+    border-left: 4px solid var(--primary-color);
+}
+
+.dynamic-item.required {
+    border-left-color: var(--error-color);
+    background: rgba(244, 67, 54, 0.03);
+}
+
+.dynamic-item-label {
+    font-weight: 600;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.dynamic-item-required {
+    color: var(--error-color);
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.dynamic-item-category {
+    background: var(--secondary-color);
+    color: var(--text-primary);
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    margin-left: auto;
+}
+
+.dynamic-item-input {
+    width: 100%;
+}
+
+/* チェックボックス項目 */
+.dynamic-checkbox-group {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    padding: 8px 0;
+}
+
+.dynamic-checkbox-group input[type="checkbox"] {
+    margin: 0;
+}
+
+.dynamic-checkbox-group label {
+    margin: 0;
+    font-weight: normal;
+    cursor: pointer;
+}
+
+/* 選択項目 */
+.dynamic-select {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 16px;
+}
+
+/* 数値項目 */
+.dynamic-numeric-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.dynamic-numeric-input {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 16px;
+}
+
+.dynamic-numeric-unit {
+    color: var(--text-secondary);
+    font-weight: 600;
+    min-width: 40px;
+}
+
+.dynamic-numeric-warning {
+    color: var(--error-color);
+    font-size: 14px;
+    margin-top: 4px;
+    display: none;
+}
+
+/* 文字列項目 */
+.dynamic-text-input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 16px;
+    resize: vertical;
+    min-height: 80px;
+}
+
+.dynamic-text-counter {
+    text-align: right;
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-top: 4px;
+}
+
+/* カテゴリ別グループ化 */
+.dynamic-category-group {
+    margin-bottom: 24px;
+}
+
+.dynamic-category-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--primary-color);
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--border-color);
+}
+
+/* 警告状態 */
+.dynamic-item.warning {
+    border-left-color: var(--warning-color);
+    background: rgba(255, 152, 0, 0.05);
+}
+
+.dynamic-item.error {
+    border-left-color: var(--error-color);
+    background: rgba(244, 67, 54, 0.05);
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+    /* ヘッダーのレスポンシブ対応 */
+    header {
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .header-main {
+        flex-direction: column;
+        gap: 8px;
+        text-align: center;
+    }
+
+    .header-logo {
+        height: 32px;
+    }
+
+    header h1 {
+        font-size: 1.4rem;
+    }
+
+    .header-actions {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    /* 既存のレスポンシブ対応 */
+    .inspection-items-header {
+        flex-direction: column;
+        gap: 12px;
+        align-items: stretch;
+    }
+    
+    .inspection-item {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .inspection-item-actions {
+        margin-top: 12px;
+        justify-content: flex-end;
+    }
+    
+    .inspection-item-meta {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .dynamic-numeric-group {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+
+    .dynamic-numeric-unit {
+        text-align: center;
+    }
+
+    .dynamic-checkbox-group {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+}
+
+/* 写真表示の強調 */
+.has-photos {
+    color: var(--error-color) !important;
+    font-weight: bold;
+}
+
+/* マンホール参考情報 */
+.reference-info {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-top: 6px;
+    padding: 8px 12px;
+    background-color: var(--accent-light);
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    font-style: italic;
+    line-height: 1.4;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    min-height: 36px;
+    box-sizing: border-box;
+}
+
+/* 点検項目関連のメッセージ */
+.no-manhole-selected,
+.no-inspection-items {
+    text-align: center;
+    padding: 20px;
+    background-color: var(--accent-light);
+    border-radius: 8px;
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+.no-inspection-items p {
+    margin: 5px 0;
+}
+
+/* 点検詳細の写真サムネイル */
+.photo-thumbnails {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.thumbnail-container {
+    position: relative;
+    background: var(--surface-color);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: transform 0.2s ease;
+}
+
+.thumbnail-container:hover {
+    transform: scale(1.05);
+    box-shadow: var(--shadow-hover);
+}
+
+.photo-thumbnail {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+    cursor: pointer;
+    display: block;
+}
+
+/* 写真拡大表示モーダル */
+.photo-expand-modal {
+    z-index: 2000;
+    background-color: rgba(0, 0, 0, 0.9);
+}
+
+.photo-expand-content {
+    max-width: 90vw;
+    max-height: 90vh;
+    width: auto;
+    height: auto;
+    margin: 5vh auto;
+    background: var(--surface-color);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+}
+
+.photo-expand-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    border-bottom: 1px solid var(--border-color);
+    background: var(--accent-light);
+}
+
+.photo-expand-title {
+    font-weight: bold;
+    font-size: 1.1em;
+    color: var(--text-primary);
+}
+
+.photo-expand-close {
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--text-secondary);
+    padding: 4px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.photo-expand-close:hover {
+    background-color: var(--error-color);
+    color: white;
+}
+
+.photo-expand-body {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.photo-navigation {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 12px;
+}
+
+.photo-nav-btn {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+}
+
+.photo-nav-btn:hover {
+    background: var(--primary-dark);
+}
+
+.photo-nav-spacer {
+    width: 40px;
+}
+
+.photo-expand-image {
+    max-width: 70vw;
+    max-height: 60vh;
+    object-fit: contain;
+    border-radius: 4px;
+    box-shadow: var(--shadow);
+}
+
+.photo-expand-info {
+    margin-top: 12px;
+    color: var(--text-secondary);
+    font-size: 0.9em;
+}

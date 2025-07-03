@@ -1,0 +1,22 @@
+[
+  {
+    "id": 1,
+    "name": "マンホール1",
+    "ratedCurrent1": 15.0,
+    "ratedCurrent2": 15.0,
+    "outputKw1": 7.5,
+    "outputKw2": 7.5,
+    "latitude": 35.6762,
+    "longitude": 139.6503
+  },
+  {
+    "id": 2,
+    "name": "マンホール2",
+    "ratedCurrent1": 20.0,
+    "ratedCurrent2": 20.0,
+    "outputKw1": 10.0,
+    "outputKw2": 10.0,
+    "latitude": 35.6812,
+    "longitude": 139.7671
+  }
+]

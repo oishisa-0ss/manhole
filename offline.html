@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>オフライン - マンホール点検アプリ</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .offline-container {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            max-width: 500px;
+            margin: 0 1rem;
+        }
+
+        .offline-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.8;
+        }
+
+        .offline-title {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .offline-message {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .retry-button {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 12px 30px;
+            font-size: 1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .retry-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .status-indicator {
+            margin-top: 2rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            font-size: 0.9rem;
+        }
+
+        .online {
+            color: #4CAF50;
+        }
+
+        .offline {
+            color: #f44336;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .loading {
+            animation: pulse 1.5s infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="offline-container">
+        <div class="offline-icon">📶</div>
+        <h1 class="offline-title">オフラインモード</h1>
+        <p class="offline-message">
+            現在インターネットに接続されていません。<br>
+            キャッシュされたコンテンツをご利用いただけます。<br>
+            接続が復旧したら、データは自動的に同期されます。
+        </p>
+        <button class="retry-button" onclick="retry()">再接続を試す</button>
+        
+        <div class="status-indicator">
+            <p>接続状態: <span id="network-status" class="offline">オフライン</span></p>
+            <p>最終更新: <span id="last-update">-</span></p>
+        </div>
+    </div>
+
+    <script>
+        // ネットワーク状態の監視
+        function updateNetworkStatus() {
+            const statusElement = document.getElementById('network-status');
+            const isOnline = navigator.onLine;
+            
+            statusElement.textContent = isOnline ? 'オンライン' : 'オフライン';
+            statusElement.className = isOnline ? 'online' : 'offline';
+            
+            if (isOnline) {
+                // オンラインになったら自動的にメインページに戻る
+                setTimeout(() => {
+                    window.location.href = '/';
+                }, 1000);
+            }
+        }
+
+        // 再接続を試行
+        function retry() {
+            const button = document.querySelector('.retry-button');
+            button.textContent = '接続中...';
+            button.classList.add('loading');
+            button.disabled = true;
+            
+            // ネットワーク状態をチェック
+            fetch('/', { 
+                method: 'HEAD',
+                cache: 'no-cache'
+            })
+            .then(() => {
+                window.location.href = '/';
+            })
+            .catch(() => {
+                button.textContent = '再接続を試す';
+                button.classList.remove('loading');
+                button.disabled = false;
+                updateNetworkStatus();
+            });
+        }
+
+        // 最終更新時刻を表示
+        function updateLastUpdate() {
+            const now = new Date();
+            const timeString = now.toLocaleString('ja-JP');
+            document.getElementById('last-update').textContent = timeString;
+        }
+
+        // イベントリスナーの設定
+        window.addEventListener('online', updateNetworkStatus);
+        window.addEventListener('offline', updateNetworkStatus);
+        
+        // 初期化
+        updateNetworkStatus();
+        updateLastUpdate();
+        
+        // 定期的に接続状態をチェック
+        setInterval(updateNetworkStatus, 5000);
+    </script>
+</body>
+</html> 

@@ -1,0 +1,21 @@
+{
+  "name": "✏️マンホールポンプ点検アプリ",
+  "short_name": "マンホール点検",
+  "description": "✏️マンホールポンプ点検アプリ",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#546E7A",
+  "icons": [
+    {
+      "src": "icon/r.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon/r.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
