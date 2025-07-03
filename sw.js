@@ -62,8 +62,10 @@ self.addEventListener('install', (event) => {
 // 完全オフライン対応のフェッチ処理
 self.addEventListener('fetch', (event) => {
     // ナビゲーションリクエスト（ページ読み込み）の処理
-    if (event.request.mode === 'navigate') {
-        event.respondWith(handleNavigateRequest(event.request));
+    // HTML ページ読み込みの判定を強化（start_url 対策）
+    if (req.mode === 'navigate' || 
+        (req.headers.get('accept')?.includes('text/html'))) {
+        event.respondWith(handleNavigateRequest(req));
         return;
     }
     
